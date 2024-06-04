@@ -1,3 +1,11 @@
+to start:
+-go to vite-react-template
+-npm i
+-npm run dev
+
+
+
+
 # vite-react-template
 
 Vitejs and React starting template using Git Hooks, Vitest, and Vitest UI and react-testing-library.
