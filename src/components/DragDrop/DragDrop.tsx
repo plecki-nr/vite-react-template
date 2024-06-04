@@ -1,4 +1,4 @@
-import React, { ReactNode, Dispatch, useState, useEffect } from "react";
+import React, { ReactNode, Dispatch, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -8,14 +8,14 @@ import {
   DroppableStateSnapshot,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
-import "./App.css";
+import "../../App.css";
+import { Status, Truck, DragDropStart } from "../../types";
 import Droppable from "./Droppable";
-import { Truck, Status } from "./App";
 
 interface DragDropProps<T> {
   state: T[][];
   setState: Dispatch<React.SetStateAction<T[][]>>;
-  renderContent: (item, columnIndex: number, itemIndex: number) => ReactNode;
+  renderContent: (item: T, columnIndex: number, itemIndex: number) => ReactNode;
 }
 
 const grid = 8;
@@ -65,7 +65,11 @@ const move = (
   return result;
 };
 
-const DragDrop = <T,>({ state, setState, renderContent }: DragDropProps<T>) => {
+const DragDrop = <T, U>({
+  state,
+  setState,
+  renderContent,
+}: DragDropProps<T, U>) => {
   const [movedTruckStatus, setMovedTruckStatus] =
     useState<keyof typeof Status>();
 
@@ -80,7 +84,9 @@ const DragDrop = <T,>({ state, setState, renderContent }: DragDropProps<T>) => {
     return [0, currentColumnIndex + 1];
   };
 
-  const onDragStart = (data: DropResult) => {
+  const onDragStart = (data: DragDropStart) => {
+    console.log("data", data);
+
     const startColumnIndex = data.source.droppableId;
     const movedStatus = Object.keys(Status)[parseInt(startColumnIndex)];
 
@@ -118,8 +124,6 @@ const DragDrop = <T,>({ state, setState, renderContent }: DragDropProps<T>) => {
     }
   };
 
-  console.log("LOG", enabledColumns());
-
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
       {state.map((el, columnIndex) => (
@@ -134,7 +138,7 @@ const DragDrop = <T,>({ state, setState, renderContent }: DragDropProps<T>) => {
               style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
-              {el.map((item, itemIndex) => (
+              {el.map((item: T, itemIndex: number) => (
                 <Draggable
                   key={item.code}
                   draggableId={item.code}
