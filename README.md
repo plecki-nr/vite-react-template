@@ -1,7 +1,7 @@
-to start:
--go to vite-react-template
--npm i
--npm run dev
+# to start:
+- go to vite-react-template
+- npm i
+- npm run dev
 
 
 
