@@ -46,7 +46,7 @@ const Form = ({ onSubmit }: FormProps) => {
           required
         />
       </label>
-      <button type="submit">Add</button>
+      <button type="submit">Add truck</button>
     </form>
   );
 };
