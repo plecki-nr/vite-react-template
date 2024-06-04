@@ -99,7 +99,35 @@ const App: React.FC = () => {
         ))}
       </div>
       <div style={{ display: "flex" }}>
-        <DragDrop state={state} setState={setState} remove={remove} />
+        <DragDrop
+          state={state}
+          setState={setState}
+          renderContent={(item, columnIndex, itemIndex) => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+            >
+              name: {item.name}
+              <br />
+              status: {item.status}
+              <br />
+              description: {item.description}
+              <button
+                onClick={() => {
+                  const newState = [...state];
+                  newState[columnIndex].splice(itemIndex, 1);
+                  setState(newState);
+
+                  remove("trucks", item.id);
+                }}
+              >
+                delete
+              </button>
+            </div>
+          )}
+        />
       </div>
     </div>
   );

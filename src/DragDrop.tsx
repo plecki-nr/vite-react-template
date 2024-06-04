@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { ReactNode, Dispatch, useState, useEffect } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -12,10 +12,10 @@ import "./App.css";
 import Droppable from "./Droppable";
 import { Truck, Status } from "./App";
 
-interface DragDropProps {
-  state: any;
-  setState: any;
-  remove: any;
+interface DragDropProps<T> {
+  state: T[][];
+  setState: Dispatch<React.SetStateAction<T[][]>>;
+  renderContent: (item, columnIndex: number, itemIndex: number) => ReactNode;
 }
 
 const grid = 8;
@@ -65,7 +65,7 @@ const move = (
   return result;
 };
 
-const DragDrop: React.FC<DragDropProps> = ({ state, setState, remove }) => {
+const DragDrop = <T,>({ state, setState, renderContent }: DragDropProps<T>) => {
   const [movedTruckStatus, setMovedTruckStatus] =
     useState<keyof typeof Status>();
 
@@ -118,13 +118,15 @@ const DragDrop: React.FC<DragDropProps> = ({ state, setState, remove }) => {
     }
   };
 
+  console.log("LOG", enabledColumns());
+
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-      {state.map((el, ind) => (
+      {state.map((el, columnIndex) => (
         <Droppable
-          key={ind}
-          droppableId={`${ind}`}
-          isDropDisabled={!enabledColumns().includes(ind)}
+          key={columnIndex}
+          droppableId={columnIndex.toString()}
+          isDropDisabled={!enabledColumns().includes(columnIndex)}
         >
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div
@@ -132,11 +134,11 @@ const DragDrop: React.FC<DragDropProps> = ({ state, setState, remove }) => {
               style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
-              {el.map((item, index) => (
+              {el.map((item, itemIndex) => (
                 <Draggable
                   key={item.code}
                   draggableId={item.code}
-                  index={index}
+                  index={itemIndex}
                 >
                   {(
                     provided: DraggableProvided,
@@ -151,29 +153,7 @@ const DragDrop: React.FC<DragDropProps> = ({ state, setState, remove }) => {
                         provided.draggableProps.style
                       )}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-around",
-                        }}
-                      >
-                        name: {item.name}
-                        <br />
-                        status: {item.status}
-                        <br />
-                        description: {item.description}
-                        <button
-                          onClick={() => {
-                            const newState = [...state];
-                            newState[ind].splice(index, 1);
-                            setState(newState);
-
-                            remove("trucks", item.id);
-                          }}
-                        >
-                          delete
-                        </button>
-                      </div>
+                      {renderContent(item, columnIndex, itemIndex)}
                     </div>
                   )}
                 </Draggable>
