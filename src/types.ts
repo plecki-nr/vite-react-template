@@ -13,12 +13,3 @@ export interface Truck {
     name: string;
     status: keyof typeof Status;
 }
-
-export interface DragDropStart {
-    draggableId: string
-    mode: string
-    source: {
-        droppableId: string, index: number
-        type: string
-    }
-}

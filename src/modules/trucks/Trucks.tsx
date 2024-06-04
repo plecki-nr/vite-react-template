@@ -3,7 +3,7 @@ import "../../App.css";
 import useApi from "../../hooks/useApi";
 import Form, { FormValues } from "../../Form";
 import DragDrop from "../../components/DragDrop/DragDrop";
-import { Status, Truck, DragDropStart } from "../../types";
+import { Status, Truck } from "../../types";
 
 const Trucks: React.FC = () => {
   const [state, setState] = useState<Truck[][]>([[], [], [], [], []]);
@@ -84,7 +84,7 @@ const Trucks: React.FC = () => {
         ))}
       </div>
       <div style={{ display: "flex" }}>
-        <DragDrop<Truck[][], DragDropStart>
+        <DragDrop<Truck[][]>
           state={state}
           setState={setState}
           renderContent={(

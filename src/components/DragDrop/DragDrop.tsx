@@ -6,10 +6,11 @@ import {
   DroppableProvided,
   DraggableProvided,
   DroppableStateSnapshot,
+  OnDragStartResponder,
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 import "../../App.css";
-import { Status, Truck, DragDropStart } from "../../types";
+import { Status, Truck } from "../../types";
 import Droppable from "./Droppable";
 
 interface DragDropProps<T> {
@@ -65,11 +66,7 @@ const move = (
   return result;
 };
 
-const DragDrop = <T, U>({
-  state,
-  setState,
-  renderContent,
-}: DragDropProps<T, U>) => {
+const DragDrop = <T,>({ state, setState, renderContent }: DragDropProps<T>) => {
   const [movedTruckStatus, setMovedTruckStatus] =
     useState<keyof typeof Status>();
 
@@ -84,9 +81,7 @@ const DragDrop = <T, U>({
     return [0, currentColumnIndex + 1];
   };
 
-  const onDragStart = (data: DragDropStart) => {
-    console.log("data", data);
-
+  const onDragStart = (data: OnDragStartResponder) => {
     const startColumnIndex = data.source.droppableId;
     const movedStatus = Object.keys(Status)[parseInt(startColumnIndex)];
 
